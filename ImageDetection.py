@@ -52,9 +52,9 @@ def ImageDetection():
 
 def baiduOCR(original_img,img):
     #百度文字识别
-    APP_ID = '24750544'
-    API_KEY = 'cZ4bIjsE0eEkRo8TBTcb8xAZ'
-    SECRECT_KEY = 'rT8wyMFlag7f0368hZBvhTXoto6zMlIj'
+    APP_ID = conf.CONF_DATA.get("APP_ID")
+    API_KEY = conf.CONF_DATA.get("API_KEY")
+    SECRECT_KEY = conf.CONF_DATA.get("SECRECT_KEY")
     client = AipOcr(APP_ID, API_KEY, SECRECT_KEY)
 
     img_b = io.BytesIO()
@@ -67,9 +67,35 @@ def baiduOCR(original_img,img):
     # 匹配关键字,匹配到应该调用微信发送
 
     alarm_key = conf.CONF_DATA.get("ALARM_KEY")
+    alarm_shield = conf.CONF_DATA.get("ALARM_SHIELD")
     print(message)
     for f in message['words_result']:
-        if f['words'].find(alarm_key) != -1:
-            original_img.save('alarm.png')
-            WeChatAlarm.alarm_text(f['words'])
-            WeChatAlarm.alarm_pic('alarm.png')
+        words = f['words']
+        shield_flag = 0
+        alarm_flag = 0
+        for i in alarm_shield:
+            if words.find(i) != -1:
+                shield_flag = 1
+        if shield_flag == 1:
+            continue
+        for i in alarm_key:
+            if words.find(i) != -1:
+                shield_flag = 1
+        if alarm_flag == 1:
+            content = ""
+            if conf.CONF_DATA.get("NEED_DEFAULT",-1) == 1:
+                if content != "":
+                    content += '\n'
+                content += words
+            if conf.CONF_DATA.get("ALARM_STRING",-1) != -1:
+                if content != "":
+                    content += '\n'
+                content += conf.CONF_DATA.get("ALARM_STRING")
+            if conf.CONF_DATA.get("NEED_TIME",-1) == 1:
+                if content != "":
+                    content += '\n'
+                content += time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+            WeChatAlarm.alarm_text(content)
+            if conf.CONF_DATA.get("NEED_SCREENSHOT") == 1:
+                original_img.save('alarm.png')
+                WeChatAlarm.alarm_pic('alarm.png')

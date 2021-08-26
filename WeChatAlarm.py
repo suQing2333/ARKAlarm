@@ -9,6 +9,7 @@ import os
 import shutil
 from queue import Queue
 import threading
+import conf
 
 logger = logging.getLogger(__file__)
 logger.setLevel(logging.DEBUG)
@@ -62,35 +63,25 @@ def handle_response(data):
         chat_message = spy_pb2.ChatMessage()
         chat_message.ParseFromString(data.bytes)
         for message in chat_message.message:
-            _type = message.type  # 消息类型 1.文本|3.图片...自行探索
+            _type = message.type  
             _from = message.wxidFrom.str  # 消息发送方
             _to = message.wxidTo.str  # 消息接收方
             content = message.content.str  # 消息内容
             _from_group_member = ""
-            if _from.endswith("@chatroom"):  # 群聊消息
-                _from_group_member = message.content.str.split(':\n', 1)[0]  # 群内发言人
-                content = message.content.str.split(':\n', 1)[-1]  # 群聊消息内容
-            image_overview_size = message.imageOverview.imageSize  # 图片缩略图大小
-            image_overview_bytes = message.imageOverview.imageBytes  # 图片缩略图数据
-            # with open("img.jpg", "wb") as wf:
-            #     wf.write(image_overview_bytes)
-            overview = message.overview  # 消息缩略
-            timestamp = message.timestamp  # 消息时间戳
+            if _from.endswith("@chatroom"):
+                _from_group_member = message.content.str.split(':\n', 1)[0]
+                content = message.content.str.split(':\n', 1)[-1] 
             if _type == 1:  # 文本消息
                 print(_from, _to, _from_group_member, content)
                 roomid = _from.split("@")
-                print(roomid)
                 if roomid[0] not in alarm_room:
                     continue
-                if content == "123321":
-                    spy.send_text(_from, "微信报警测试\n" + content)
+                check_list = content.split(' ')
+                if len(check_list) != 2:
+                    continue
+                if check_list[0] == conf.CONF_DATA.get("USER_NAME") and check_list[1] == conf.CONF_DATA.get("TEST_REQUEST"):
+                    spy.send_text(_from, check_list[0] + "is online")
                     time.sleep(2)
-                    spy.send_file(_from, r"E:\test.png")
-            elif _type == 3:  # 图片消息
-                file_path = message.file
-                file_path = os.path.join(WECHAT_PROFILE, file_path)
-                time.sleep(10)
-                # spy.decrypt_image(file_path, "a.jpg")
     elif data.type == ACCOUNT_DETAILS:  # 登录账号详情
         if data.code:
             account_details = spy_pb2.AccountDetails()
@@ -117,7 +108,8 @@ def handle_response(data):
 
 
 def start_wechat():
-    pid = spy.run(r"C:\Program Files (x86)\Tencent\WeChat\WeChat.exe")
+    wechat_path = conf.CONF_DATA.get("WECHAT_PATH")
+    pid = spy.run(wechat_path)
     pop_response()
 
 class myThread (threading.Thread):
@@ -130,7 +122,7 @@ class myThread (threading.Thread):
         print("开始线程：" + self.name)
         start_wechat()
         input("Press Any Key")
-        
+
 def start():    
     thread1 = myThread(1, "Thread-1", 1)
     thread1.start()

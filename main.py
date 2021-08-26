@@ -4,21 +4,19 @@
 import sys
 import win32gui as w
 import time
-import ImageDetection
 import WeChatAlarm
+import ImageDetection
 import conf
 
-def 
-
 def main():
+    conf.reload_conf()
     WeChatAlarm.start()
     title_find = conf.CONF_DATA.get("TITLE_FIND")
     while True:
         title = w.GetWindowText (w.GetForegroundWindow())
         if title.find("ARK") != -1:
-            print(title)
             ImageDetection.ImageDetection()
-        time.sleep(1)
+        time.sleep(2)
 
 if __name__ == "__main__":
     main()
