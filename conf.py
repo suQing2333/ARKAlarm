@@ -10,19 +10,19 @@ CONF_DATA = {
 	"SECRECT_KEY":"rT8wyMFlag7f0368hZBvhTXoto6zMlIj",
 
 	# 识别的屏幕区间
-	"BEGIN_X":0,
-	"BEGIN_Y":0,
-	"END_X":1920,
-	"END_Y":200,
+	"BEGIN_X":600,
+	"BEGIN_Y":20,
+	"END_X":1320,
+	"END_Y":70,
 
 	# 识别的颜色区间 HSV格式
 	"LOW_HSV":[0,200,200],
 	"HIGH_HSV":[10,255,255],
 	# 文字识别阈值
-	"RATE":10,
+	"RATE":4,
 
 	# 报警匹配的字符串 
-	"ALARM_KEY":"",
+	"ALARM_KEY":"killed",
 	# 报警的 群聊roomid
 	"ALARM_ROOM":[],
 	# 是否需要报警截图
