@@ -55,7 +55,8 @@ def get_value(key,defValue=None):
 	return _global_dict.get(key)
 
 def reload_conf():
-	for line in open("conf.txt","r"):
+	for line in open(r"conf.txt","r"):
+		line = line.rstrip('\n')
 		line_list = line.split(':',1)
 		key = line_list[0]
 		value = line_list[1]
@@ -80,6 +81,6 @@ def reload_conf():
 		# else:
 		CONF_DATA[key] = value
 
-print(CONF_DATA)
-reload_conf()
-print(CONF_DATA)
+# print(CONF_DATA)
+# reload_conf()
+# print(CONF_DATA)

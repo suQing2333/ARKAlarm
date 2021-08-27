@@ -22,7 +22,7 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 logger.addHandler(sh)
 
-alarm_room = ["24467106791"]
+# alarm_room = ["24467106791"]
 # 21012194292
 
 WECHAT_PROFILE = rf"C:\Users\{os.environ['USERNAME']}\Documents\WeChat Files"
@@ -74,7 +74,7 @@ def handle_response(data):
             if _type == 1:  # 文本消息
                 print(_from, _to, _from_group_member, content)
                 roomid = _from.split("@")
-                if roomid[0] not in alarm_room:
+                if roomid[0] not in conf.CONF_DATA.get("ALARM_ROOM")::
                     continue
                 check_list = content.split(' ')
                 if len(check_list) != 2:
@@ -121,7 +121,6 @@ class myThread (threading.Thread):
     def run(self):
         print("开始线程：" + self.name)
         start_wechat()
-        input("Press Any Key")
 
 def start():    
     thread1 = myThread(1, "Thread-1", 1)
@@ -129,9 +128,9 @@ def start():
 
 
 def alarm_text(word):
-    for i in alarm_room:
+    for i in conf.CONF_DATA.get("ALARM_ROOM"):
         spy.send_text(i+"@chatroom", word)
 
 def alarm_pic(img_path):
-    for i in alarm_room:
+    for i in conf.CONF_DATA.get("ALARM_ROOM"):
         spy.send_file(i+"@chatroom", img_path)

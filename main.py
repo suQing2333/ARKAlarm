@@ -16,7 +16,7 @@ def main():
         title = w.GetWindowText (w.GetForegroundWindow())
         if title.find("ARK") != -1:
             ImageDetection.ImageDetection()
-        time.sleep(2)
+        time.sleep(4)
 
 if __name__ == "__main__":
     main()

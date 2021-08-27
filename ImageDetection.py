@@ -80,7 +80,7 @@ def baiduOCR(original_img,img):
             continue
         for i in alarm_key:
             if words.find(i) != -1:
-                shield_flag = 1
+                alarm_flag = 1
         if alarm_flag == 1:
             content = ""
             if conf.CONF_DATA.get("NEED_DEFAULT",-1) == 1:
@@ -94,7 +94,7 @@ def baiduOCR(original_img,img):
             if conf.CONF_DATA.get("NEED_TIME",-1) == 1:
                 if content != "":
                     content += '\n'
-                content += time.strftime("%Y-%m-%d-%H_%M_%S", time.localtime())
+                content += time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             WeChatAlarm.alarm_text(content)
             if conf.CONF_DATA.get("NEED_SCREENSHOT") == 1:
                 original_img.save('alarm.png')

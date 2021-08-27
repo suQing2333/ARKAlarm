@@ -1,0 +1,7 @@
+__pycache__/
+dist/
+build/
+Logs/
+*.spec
+*.log
+conf.txt
