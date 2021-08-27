@@ -9,6 +9,8 @@ import conf
 import WeChatAlarm
 import os
 
+last_alarm = ""
+
 def ImageDetection():
     # 截取屏幕并裁剪
     img = ImageGrab.grab()
@@ -83,6 +85,9 @@ def baiduOCR(original_img,img):
                 alarm_flag = 1
         if alarm_flag == 1:
             content = ""
+            if last_alarm == words:
+                continue
+            last_alarm = words
             if conf.CONF_DATA.get("NEED_DEFAULT",-1) == 1:
                 if content != "":
                     content += '\n'

@@ -74,7 +74,7 @@ def handle_response(data):
             if _type == 1:  # 文本消息
                 print(_from, _to, _from_group_member, content)
                 roomid = _from.split("@")
-                if roomid[0] not in conf.CONF_DATA.get("ALARM_ROOM")::
+                if roomid[0] not in conf.CONF_DATA.get("ALARM_ROOM"):
                     continue
                 check_list = content.split(' ')
                 if len(check_list) != 2:
